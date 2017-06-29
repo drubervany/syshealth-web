@@ -1,0 +1,16 @@
+version: '2'
+services:
+    syshealthweb-mongodb:
+        image: mongo:3.2.10
+        ports:
+            - "27017:27017"
+        command: mongos --configdb syshealthweb-mongodb-config
+    syshealthweb-mongodb-node:
+        build:
+            context: .
+            dockerfile: mongodb/MongoDB.Dockerfile
+        command: mongod --replSet rs1 --noprealloc --smallfiles
+    syshealthweb-mongodb-config:
+        image: mongo:3.2.10
+        container_name: syshealthweb-mongodb-config
+        command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
